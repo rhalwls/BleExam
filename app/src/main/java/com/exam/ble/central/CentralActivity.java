@@ -37,7 +37,7 @@ public class CentralActivity extends AppCompatActivity {
     private Button btnStop;
     // button for send data
     private Button btnSend;
-
+    private Button btnReq;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,7 +207,9 @@ public class CentralActivity extends AppCompatActivity {
             }
         });
     }
+    private void requestToServer(){
 
+    }
     CentralCallback centralCallback = new CentralCallback() {
         @Override
         public void requestEnableBLE() {

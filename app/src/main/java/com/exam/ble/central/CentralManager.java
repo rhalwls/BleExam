@@ -36,7 +36,8 @@ import static com.exam.ble.Constants.SERVICE_UUID;
 public class CentralManager {
     private final String TAG = CentralManager.class.getSimpleName();
 
-    protected static volatile CentralManager sInstance = null;
+    protected static volatile CentralManager sInstance = null;//singleton pattern
+    protected ClientHelper clientHelper = null;
 
     private Context mContext;
 
@@ -63,6 +64,7 @@ public class CentralManager {
 
     public CentralManager(Context context) {
         this.mContext = context.getApplicationContext();
+        this.clientHelper = new ClientHelper();
     }
 
     public void setCallBack(CentralCallback listener) {
@@ -415,6 +417,9 @@ public class CentralManager {
             Log.d(TAG, "read: " + message);
             listener.onStatusMsg("read : " + message);
             listener.onToast("read : " + message);
+            //parse data for our protocol
+
+
         }
     }
 }
