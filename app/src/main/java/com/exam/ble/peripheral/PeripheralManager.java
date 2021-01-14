@@ -29,7 +29,7 @@ public class PeripheralManager {
     private final String TAG = PeripheralManager.class.getSimpleName();
 
     protected static volatile PeripheralManager sInstance = null;
-
+    protected ServerHelper serverHelper = null;
     private Context mContext;
 
     private BluetoothManager mBluetoothManager;
@@ -44,6 +44,7 @@ public class PeripheralManager {
 
     public PeripheralManager(Context context) {
         this.mContext = context.getApplicationContext();
+        this.serverHelper = new ServerHelper(3);
     }
 
     public void setCallBack(PeripheralCallback listener) {
@@ -191,7 +192,34 @@ public class PeripheralManager {
 
         listener.onStatusMsg("write : " + message);
     }
+    public void sendNumberData() {
+        /**
+         * 테스트중 아래의 오류가 발생한적이 있다.
+         * java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.String android.bluetooth.BluetoothDevice.getAddress()' on a null object reference
+         * if 문으로 체크해보자.
+         */
+        if (mBluetoothDevice == null) {
+            Log.e(TAG, "BluetoothDevice is null");
+            listener.onStatusMsg("BluetoothDevice is null");
+            return;
+        } else if (mBluetoothDevice.getAddress() == null) {
+            Log.e(TAG, "GattServer lost device address");
+            listener.onStatusMsg("GattServer lost device address");
+            return;
+        } else if (mGattServer == null) {
+            Log.e(TAG, "GattServer is null");
+            listener.onStatusMsg("GattServer is null");
+            return;
+        }
 
+        boolean indicate = (mCharacteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_INDICATE) == BluetoothGattCharacteristic.PROPERTY_INDICATE;
+        //일단은 measure라도 byte 배열로 변환해서 보내줌
+        byte[] message = serverHelper.getStatusStr();
+        mCharacteristic.setValue(message); // 20byte limit
+        mGattServer.notifyCharacteristicChanged(mBluetoothDevice, mCharacteristic, indicate);
+
+        listener.onStatusMsg("write : " + message);
+    }
     /**
      * Advertise Callback
      */

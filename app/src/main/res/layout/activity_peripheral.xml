@@ -59,14 +59,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Send Data"/>
+                android:text="Send Data" />
 
             <Button
                 android:id="@+id/btnClose"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Close"/>
+                android:text="Close" />
 
         </LinearLayout>
     </LinearLayout>
